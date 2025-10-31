@@ -248,11 +248,11 @@ export default function Checkout() {
               <div className="space-y-3 mb-6">
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-600">Experience</span>
-                  <span className="text-gray-900 font-semibold">Kayaking</span>
+                  <span className="text-gray-900 font-semibold">{experienceId ? `Experience ${experienceId}` : "-"}</span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-600">Date</span>
-                  <span className="text-gray-900 font-semibold">2025-10-22</span>
+                  <span className="text-gray-900 font-semibold">{slotId ? "2025-10-22" : "-"}</span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-600">Time</span>
@@ -267,7 +267,7 @@ export default function Checkout() {
               <div className="space-y-3 pb-4 border-b border-gray-200 mb-4">
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-600">Subtotal</span>
-                  <span className="text-gray-900 font-semibold">₹{totalPrice}</span>
+                  <span className="text-gray-900 font-semibold">₹{Math.round(totalPrice)}</span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-600">Taxes</span>
