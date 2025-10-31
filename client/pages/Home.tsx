@@ -38,89 +38,81 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-gray-50">
       <Header />
-      
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="mb-12">
-          <h1 className="text-4xl font-bold text-slate-900 mb-4">
-            Discover Experiences
-          </h1>
-          <p className="text-lg text-slate-600">
-            Explore amazing travel experiences and book your next adventure
-          </p>
-        </div>
 
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {error && (
-          <div className="mb-8 p-4 bg-red-50 border border-red-200 rounded-lg">
+          <div className="mb-8 p-4 bg-red-50 border border-red-200 rounded">
             <p className="text-red-700">{error}</p>
           </div>
         )}
 
         {loading ? (
           <div className="flex items-center justify-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-400"></div>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {experiences.map((experience) => (
               <Link
                 key={experience.id}
                 to={`/details/${experience.id}`}
                 className="group"
               >
-                <div className="bg-white rounded-lg overflow-hidden border border-slate-200 hover:shadow-lg transition-shadow">
-                  <div className="relative overflow-hidden h-64 bg-slate-200">
+                <div className="bg-white rounded overflow-hidden hover:shadow-md transition-shadow">
+                  <div className="relative overflow-hidden h-48 bg-gray-200">
                     <img
                       src={experience.image}
                       alt={experience.title}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />
                   </div>
-                  
-                  <div className="p-6">
-                    <h3 className="text-xl font-semibold text-slate-900 mb-2 line-clamp-2">
+
+                  <div className="p-4">
+                    <h3 className="text-base font-semibold text-gray-900 mb-1 line-clamp-2">
                       {experience.title}
                     </h3>
-                    
-                    <p className="text-slate-600 text-sm mb-4 line-clamp-2">
+
+                    <div className="flex items-center gap-2 mb-3 text-xs text-gray-600">
+                      <MapPin className="w-3 h-3" />
+                      <span className="line-clamp-1">{experience.location}</span>
+                    </div>
+
+                    <p className="text-gray-600 text-xs mb-3 line-clamp-2">
                       {experience.description}
                     </p>
 
-                    <div className="flex items-center gap-2 mb-3 text-sm text-slate-700">
-                      <MapPin className="w-4 h-4 text-slate-500" />
-                      <span>{experience.location}</span>
-                    </div>
-
-                    <div className="flex items-center gap-1 mb-4">
-                      <div className="flex items-center">
+                    <div className="flex items-center gap-1 mb-3">
+                      <div className="flex">
                         {[...Array(5)].map((_, i) => (
                           <Star
                             key={i}
-                            className={`w-4 h-4 ${
+                            className={`w-3 h-3 ${
                               i < Math.floor(experience.rating)
                                 ? "fill-yellow-400 text-yellow-400"
-                                : "text-slate-300"
+                                : "text-gray-300"
                             }`}
                           />
                         ))}
                       </div>
-                      <span className="text-sm text-slate-600">
-                        {experience.rating} ({experience.reviews} reviews)
+                      <span className="text-xs text-gray-600">
+                        {experience.rating}
                       </span>
                     </div>
 
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-center justify-between mb-4">
                       <div>
-                        <p className="text-sm text-slate-600">From</p>
-                        <p className="text-2xl font-bold text-slate-900">
-                          ${experience.price}
+                        <p className="text-xs text-gray-600">From</p>
+                        <p className="text-lg font-bold text-gray-900">
+                          ₹{experience.price}
                         </p>
                       </div>
-                      <span className="text-sm text-slate-600 text-right">
-                        {experience.duration}
-                      </span>
                     </div>
+
+                    <button className="w-full bg-yellow-400 text-black font-semibold py-2 rounded text-sm hover:bg-yellow-500 transition-colors">
+                      View Details
+                    </button>
                   </div>
                 </div>
               </Link>
@@ -130,7 +122,7 @@ export default function Home() {
 
         {!loading && experiences.length === 0 && !error && (
           <div className="text-center py-12">
-            <p className="text-slate-600 text-lg">No experiences found</p>
+            <p className="text-gray-600 text-lg">No experiences found</p>
           </div>
         )}
       </main>
