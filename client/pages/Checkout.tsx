@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
-import { ChevronLeft, AlertCircle } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 import Header from "@/components/Header";
 
 export default function Checkout() {
@@ -15,13 +15,8 @@ export default function Checkout() {
     price = 0,
   } = state;
 
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
-  });
-
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
   const [promo, setPromo] = useState("");
   const [discount, setDiscount] = useState(0);
   const [promoError, setPromoError] = useState("");
@@ -29,24 +24,11 @@ export default function Checkout() {
   const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [agreeTerms, setAgreeTerms] = useState(false);
 
   const totalPrice = price * participants;
   const discountAmount = (totalPrice * discount) / 100;
   const finalPrice = totalPrice - discountAmount;
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-    if (errors[name]) {
-      setErrors((prev) => ({
-        ...prev,
-        [name]: "",
-      }));
-    }
-  };
 
   const validatePromoCode = async () => {
     if (!promo.trim()) {
@@ -84,14 +66,11 @@ export default function Checkout() {
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
 
-    if (!formData.firstName.trim())
-      newErrors.firstName = "First name is required";
-    if (!formData.lastName.trim())
-      newErrors.lastName = "Last name is required";
-    if (!formData.email.trim()) newErrors.email = "Email is required";
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email))
+    if (!fullName.trim()) newErrors.fullName = "Full name is required";
+    if (!email.trim()) newErrors.email = "Email is required";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
       newErrors.email = "Invalid email format";
-    if (!formData.phone.trim()) newErrors.phone = "Phone number is required";
+    if (!agreeTerms) newErrors.terms = "You must agree to terms and safety policy";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -105,6 +84,9 @@ export default function Checkout() {
     setSubmitting(true);
 
     try {
+      const [firstName, ...lastNameParts] = fullName.trim().split(" ");
+      const lastName = lastNameParts.join(" ") || "";
+
       const response = await fetch("/api/bookings", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -112,11 +94,11 @@ export default function Checkout() {
           experienceId,
           slotId,
           participants,
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-          email: formData.email,
-          phone: formData.phone,
-          totalPrice: finalPrice,
+          firstName,
+          lastName,
+          email,
+          phone: "",
+          totalPrice: Math.round(finalPrice * 100) / 100,
           discountApplied: discount,
           promoCode: promo || null,
         }),
@@ -151,194 +133,158 @@ export default function Checkout() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Link
           to="/"
-          className="flex items-center gap-2 text-blue-600 hover:text-blue-700 font-semibold mb-8"
+          className="flex items-center gap-2 text-gray-600 hover:text-gray-800 mb-8 text-sm"
         >
-          <ChevronLeft className="w-5 h-5" />
-          Back to Experiences
+          <ChevronLeft className="w-4 h-4" />
+          Checkout
         </Link>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2">
-            <h1 className="text-4xl font-bold text-slate-900 mb-8">
-              Complete Your Booking
-            </h1>
-
             <form onSubmit={handleSubmit} className="space-y-6">
               {errors.submit && (
-                <div className="p-4 bg-red-50 border border-red-200 rounded-lg flex gap-3">
-                  <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
-                  <p className="text-red-700">{errors.submit}</p>
+                <div className="p-4 bg-red-50 border border-red-200 rounded">
+                  <p className="text-red-700 text-sm">{errors.submit}</p>
                 </div>
               )}
 
-              <div className="bg-slate-50 rounded-lg border border-slate-200 p-6">
-                <h2 className="text-2xl font-bold text-slate-900 mb-6">
-                  Your Information
-                </h2>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-semibold text-slate-900 mb-2">
-                      First Name *
-                    </label>
-                    <input
-                      type="text"
-                      name="firstName"
-                      value={formData.firstName}
-                      onChange={handleInputChange}
-                      placeholder="John"
-                      className={`w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors ${
-                        errors.firstName
-                          ? "border-red-500 focus:border-red-600"
-                          : "border-slate-200 focus:border-blue-600"
-                      }`}
-                    />
-                    {errors.firstName && (
-                      <p className="text-red-600 text-sm mt-1">
-                        {errors.firstName}
-                      </p>
-                    )}
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-semibold text-slate-900 mb-2">
-                      Last Name *
-                    </label>
-                    <input
-                      type="text"
-                      name="lastName"
-                      value={formData.lastName}
-                      onChange={handleInputChange}
-                      placeholder="Doe"
-                      className={`w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors ${
-                        errors.lastName
-                          ? "border-red-500 focus:border-red-600"
-                          : "border-slate-200 focus:border-blue-600"
-                      }`}
-                    />
-                    {errors.lastName && (
-                      <p className="text-red-600 text-sm mt-1">
-                        {errors.lastName}
-                      </p>
-                    )}
-                  </div>
-                </div>
-
-                <div className="mt-4">
-                  <label className="block text-sm font-semibold text-slate-900 mb-2">
-                    Email Address *
-                  </label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    placeholder="john@example.com"
-                    className={`w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors ${
-                      errors.email
-                        ? "border-red-500 focus:border-red-600"
-                        : "border-slate-200 focus:border-blue-600"
-                    }`}
-                  />
-                  {errors.email && (
-                    <p className="text-red-600 text-sm mt-1">{errors.email}</p>
-                  )}
-                </div>
-
-                <div className="mt-4">
-                  <label className="block text-sm font-semibold text-slate-900 mb-2">
-                    Phone Number *
-                  </label>
-                  <input
-                    type="tel"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleInputChange}
-                    placeholder="+1 (555) 000-0000"
-                    className={`w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors ${
-                      errors.phone
-                        ? "border-red-500 focus:border-red-600"
-                        : "border-slate-200 focus:border-blue-600"
-                    }`}
-                  />
-                  {errors.phone && (
-                    <p className="text-red-600 text-sm mt-1">{errors.phone}</p>
-                  )}
-                </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-900 mb-2">
+                  Full name
+                </label>
+                <input
+                  type="text"
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                  placeholder="Your name"
+                  className={`w-full px-4 py-2 rounded border-2 focus:outline-none transition-colors text-sm ${
+                    errors.fullName
+                      ? "border-red-500 focus:border-red-600"
+                      : "border-gray-300 focus:border-yellow-400"
+                  }`}
+                />
+                {errors.fullName && (
+                  <p className="text-red-600 text-xs mt-1">{errors.fullName}</p>
+                )}
               </div>
 
-              <div className="bg-slate-50 rounded-lg border border-slate-200 p-6">
-                <h2 className="text-2xl font-bold text-slate-900 mb-6">
-                  Have a Promo Code?
-                </h2>
+              <div>
+                <label className="block text-sm font-semibold text-gray-900 mb-2">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Your name"
+                  className={`w-full px-4 py-2 rounded border-2 focus:outline-none transition-colors text-sm ${
+                    errors.email
+                      ? "border-red-500 focus:border-red-600"
+                      : "border-gray-300 focus:border-yellow-400"
+                  }`}
+                />
+                {errors.email && (
+                  <p className="text-red-600 text-xs mt-1">{errors.email}</p>
+                )}
+              </div>
 
-                <div className="flex gap-3">
+              <div>
+                <label className="block text-sm font-semibold text-gray-900 mb-2">
+                  Promo code
+                </label>
+                <div className="flex gap-2">
                   <input
                     type="text"
                     value={promo}
                     onChange={(e) => setPromo(e.target.value.toUpperCase())}
                     placeholder="Enter promo code"
-                    className="flex-1 px-4 py-3 rounded-lg border-2 border-slate-200 focus:outline-none focus:border-blue-600"
+                    className="flex-1 px-4 py-2 rounded border-2 border-gray-300 focus:outline-none focus:border-yellow-400 text-sm"
                   />
                   <button
                     type="button"
                     onClick={validatePromoCode}
                     disabled={loading}
-                    className="px-6 py-3 bg-slate-200 text-slate-900 font-semibold rounded-lg hover:bg-slate-300 transition-colors disabled:opacity-50"
+                    className="px-6 py-2 bg-black text-white font-semibold rounded text-sm hover:bg-gray-800 transition-colors disabled:opacity-50"
                   >
-                    {loading ? "Validating..." : "Apply"}
+                    Apply
                   </button>
                 </div>
-
                 {promoError && (
-                  <p className="text-red-600 text-sm mt-2">{promoError}</p>
+                  <p className="text-red-600 text-xs mt-1">{promoError}</p>
                 )}
                 {promoSuccess && (
-                  <p className="text-green-600 text-sm mt-2">{promoSuccess}</p>
+                  <p className="text-green-600 text-xs mt-1">{promoSuccess}</p>
                 )}
               </div>
+
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  id="terms"
+                  checked={agreeTerms}
+                  onChange={(e) => setAgreeTerms(e.target.checked)}
+                  className="w-4 h-4 cursor-pointer"
+                />
+                <label htmlFor="terms" className="text-xs text-gray-700 cursor-pointer">
+                  I agree to the terms and safety policy
+                </label>
+              </div>
+              {errors.terms && (
+                <p className="text-red-600 text-xs">{errors.terms}</p>
+              )}
 
               <button
                 type="submit"
                 disabled={submitting}
-                className="w-full bg-blue-600 text-white font-semibold py-4 rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 text-lg"
+                className="w-full bg-yellow-400 text-black font-bold py-3 rounded hover:bg-yellow-500 transition-colors disabled:opacity-50 text-sm"
               >
-                {submitting ? "Processing..." : "Complete Booking"}
+                {submitting ? "Processing..." : "Pay and Confirm"}
               </button>
             </form>
           </div>
 
           <div className="lg:col-span-1">
-            <div className="sticky top-8 bg-slate-50 rounded-lg border border-slate-200 p-6">
-              <h2 className="text-2xl font-bold text-slate-900 mb-6">
-                Price Summary
-              </h2>
-
-              <div className="space-y-4 pb-4 border-b border-slate-200">
-                <div className="flex justify-between">
-                  <span className="text-slate-600">
-                    {participants} participant{participants > 1 ? "s" : ""} × $
-                    {price}
-                  </span>
-                  <span className="font-semibold text-slate-900">
-                    ${totalPrice.toFixed(2)}
-                  </span>
+            <div className="sticky top-8 bg-white border border-gray-200 rounded p-6">
+              <div className="space-y-3 mb-6">
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600">Experience</span>
+                  <span className="text-gray-900 font-semibold">Kayaking</span>
                 </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600">Date</span>
+                  <span className="text-gray-900 font-semibold">2025-10-22</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600">Time</span>
+                  <span className="text-gray-900 font-semibold">09:00 am</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600">Qty</span>
+                  <span className="text-gray-900 font-semibold">{participants}</span>
+                </div>
+              </div>
 
+              <div className="space-y-3 pb-4 border-b border-gray-200 mb-4">
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600">Subtotal</span>
+                  <span className="text-gray-900 font-semibold">₹{totalPrice}</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600">Taxes</span>
+                  <span className="text-gray-900 font-semibold">₹50</span>
+                </div>
                 {discount > 0 && (
-                  <div className="flex justify-between text-green-600">
-                    <span>Promo Discount ({discount}%)</span>
-                    <span>-${discountAmount.toFixed(2)}</span>
+                  <div className="flex justify-between text-sm text-green-600">
+                    <span>Discount ({discount}%)</span>
+                    <span>-₹{discountAmount.toFixed(2)}</span>
                   </div>
                 )}
               </div>
 
-              <div className="py-4 flex justify-between items-end">
-                <span className="text-lg font-semibold text-slate-900">
-                  Total
-                </span>
-                <span className="text-3xl font-bold text-blue-600">
-                  ${finalPrice.toFixed(2)}
+              <div className="flex justify-between items-end">
+                <span className="font-semibold text-gray-900">Total</span>
+                <span className="text-2xl font-bold text-gray-900">
+                  ₹{Math.round(finalPrice + 50)}
                 </span>
               </div>
             </div>
