@@ -93,7 +93,9 @@ export default function Details() {
         <Header />
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="text-center">
-            <p className="text-red-700 mb-4">{error || "Experience not found"}</p>
+            <p className="text-red-700 mb-4">
+              {error || "Experience not found"}
+            </p>
             <Link
               to="/"
               className="text-gray-900 hover:text-gray-700 font-semibold"
@@ -106,7 +108,7 @@ export default function Details() {
     );
   }
 
-  const uniqueDates = Array.from(new Set(slots.map(s => s.date)));
+  const uniqueDates = Array.from(new Set(slots.map((s) => s.date)));
 
   return (
     <div className="min-h-screen bg-white">
@@ -147,7 +149,7 @@ export default function Details() {
                     key={date}
                     onClick={() => {
                       setSelectedDate(date);
-                      const slot = slots.find(s => s.date === date);
+                      const slot = slots.find((s) => s.date === date);
                       if (slot) {
                         setSelectedSlot(slot.id);
                         setSelectedTime(slot.time);
@@ -161,7 +163,7 @@ export default function Details() {
                   >
                     {new Date(date).toLocaleDateString("en-US", {
                       month: "short",
-                      day: "numeric"
+                      day: "numeric",
                     })}
                   </button>
                 ))}
@@ -173,26 +175,28 @@ export default function Details() {
                 Choose time
               </h3>
               <div className="flex gap-2 flex-wrap">
-                {slots.filter(s => s.date === selectedDate).map((slot) => (
-                  <button
-                    key={slot.id}
-                    onClick={() => {
-                      setSelectedSlot(slot.id);
-                      setSelectedTime(slot.time);
-                    }}
-                    disabled={slot.available === 0}
-                    className={`px-4 py-2 rounded text-sm font-semibold transition-colors ${
-                      selectedSlot === slot.id
-                        ? "bg-yellow-400 text-black"
-                        : slot.available === 0
-                        ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-                        : "bg-gray-100 text-gray-900 hover:bg-gray-200"
-                    }`}
-                  >
-                    {slot.time}
-                    {slot.available === 0 ? " booked" : ""}
-                  </button>
-                ))}
+                {slots
+                  .filter((s) => s.date === selectedDate)
+                  .map((slot) => (
+                    <button
+                      key={slot.id}
+                      onClick={() => {
+                        setSelectedSlot(slot.id);
+                        setSelectedTime(slot.time);
+                      }}
+                      disabled={slot.available === 0}
+                      className={`px-4 py-2 rounded text-sm font-semibold transition-colors ${
+                        selectedSlot === slot.id
+                          ? "bg-yellow-400 text-black"
+                          : slot.available === 0
+                            ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                            : "bg-gray-100 text-gray-900 hover:bg-gray-200"
+                      }`}
+                    >
+                      {slot.time}
+                      {slot.available === 0 ? " booked" : ""}
+                    </button>
+                  ))}
               </div>
             </div>
 
@@ -200,9 +204,7 @@ export default function Details() {
               <h3 className="text-base font-semibold text-gray-900 mb-4">
                 About
               </h3>
-              <p className="text-gray-700 text-sm">
-                {experience.description}
-              </p>
+              <p className="text-gray-700 text-sm">{experience.description}</p>
             </div>
           </div>
 
@@ -211,20 +213,33 @@ export default function Details() {
               <div className="mb-6 pb-6 border-b border-gray-200">
                 <div className="flex justify-between mb-2">
                   <span className="text-gray-600 text-sm">Starts at</span>
-                  <span className="font-bold text-gray-900">₹{experience.price}</span>
+                  <span className="font-bold text-gray-900">
+                    ₹{experience.price}
+                  </span>
                 </div>
                 <div className="flex justify-between mb-2">
                   <span className="text-gray-600 text-sm">Quantity</span>
                   <div className="flex items-center gap-3">
                     <button
-                      onClick={() => setParticipants(Math.max(1, participants - 1))}
+                      onClick={() =>
+                        setParticipants(Math.max(1, participants - 1))
+                      }
                       className="w-6 h-6 flex items-center justify-center border border-gray-300 rounded text-sm"
                     >
                       −
                     </button>
-                    <span className="font-semibold text-gray-900">{participants}</span>
+                    <span className="font-semibold text-gray-900">
+                      {participants}
+                    </span>
                     <button
-                      onClick={() => setParticipants(Math.min(experience.maxParticipants, participants + 1))}
+                      onClick={() =>
+                        setParticipants(
+                          Math.min(
+                            experience.maxParticipants,
+                            participants + 1,
+                          ),
+                        )
+                      }
                       className="w-6 h-6 flex items-center justify-center border border-gray-300 rounded text-sm"
                     >
                       +
@@ -233,7 +248,9 @@ export default function Details() {
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600 text-sm">Subtotal</span>
-                  <span className="font-bold text-gray-900">₹{experience.price * participants}</span>
+                  <span className="font-bold text-gray-900">
+                    ₹{experience.price * participants}
+                  </span>
                 </div>
               </div>
 
@@ -244,7 +261,9 @@ export default function Details() {
                 </div>
                 <div className="flex justify-between text-lg">
                   <span className="font-bold text-gray-900">Total</span>
-                  <span className="font-bold text-gray-900">₹{experience.price * participants + 50}</span>
+                  <span className="font-bold text-gray-900">
+                    ₹{experience.price * participants + 50}
+                  </span>
                 </div>
               </div>
 

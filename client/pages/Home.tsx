@@ -76,7 +76,9 @@ export default function Home() {
 
                     <div className="flex items-center gap-2 mb-3 text-xs text-gray-600">
                       <MapPin className="w-3 h-3" />
-                      <span className="line-clamp-1">{experience.location}</span>
+                      <span className="line-clamp-1">
+                        {experience.location}
+                      </span>
                     </div>
 
                     <p className="text-gray-600 text-xs mb-3 line-clamp-2">

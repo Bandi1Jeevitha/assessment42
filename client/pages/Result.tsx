@@ -41,14 +41,9 @@ export default function Result() {
             Booking Confirmed
           </h1>
 
-          <p className="text-lg text-gray-700 mb-8">
-            Ref ID: {bookingId}
-          </p>
+          <p className="text-lg text-gray-700 mb-8">Ref ID: {bookingId}</p>
 
-          <Link
-            to="/"
-            className="text-gray-600 hover:text-gray-800 text-sm"
-          >
+          <Link to="/" className="text-gray-600 hover:text-gray-800 text-sm">
             Back to Home
           </Link>
         </div>

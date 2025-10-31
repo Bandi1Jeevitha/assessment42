@@ -6,9 +6,14 @@ export default function Header() {
     <header className="border-b border-gray-200 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
         <div className="flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+          <Link
+            to="/"
+            className="flex items-center gap-2 hover:opacity-80 transition-opacity"
+          >
             <MapPin className="w-6 h-6 text-gray-900" />
-            <span className="text-xl font-bold text-gray-900">highway delite</span>
+            <span className="text-xl font-bold text-gray-900">
+              highway delite
+            </span>
           </Link>
           <div className="flex items-center gap-2">
             <input

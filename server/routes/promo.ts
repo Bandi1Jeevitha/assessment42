@@ -8,7 +8,10 @@ export const handleValidatePromo: RequestHandler = (req, res) => {
     if (!code) {
       return res
         .status(400)
-        .json({ error: "Promo code is required", message: "Please enter a promo code" });
+        .json({
+          error: "Promo code is required",
+          message: "Please enter a promo code",
+        });
     }
 
     if (!totalPrice || totalPrice <= 0) {

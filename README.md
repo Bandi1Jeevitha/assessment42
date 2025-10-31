@@ -16,6 +16,7 @@ A modern, full-stack web application for discovering travel experiences, selecti
 ## 🏗️ Tech Stack
 
 ### Frontend
+
 - **Framework**: React 18 + TypeScript
 - **Build Tool**: Vite
 - **Styling**: Tailwind CSS 3
@@ -26,12 +27,14 @@ A modern, full-stack web application for discovering travel experiences, selecti
 - **Data Fetching**: Fetch API
 
 ### Backend
+
 - **Runtime**: Node.js
 - **Framework**: Express.js
 - **Language**: TypeScript
 - **Development**: Vite (with server plugin)
 
 ### Development Tools
+
 - **Testing**: Vitest
 - **Package Manager**: pnpm
 - **Code Quality**: TypeScript, ESLint
@@ -125,13 +128,16 @@ bookit/
 ## 🛣️ API Endpoints
 
 ### Experiences
+
 - `GET /api/experiences` - Get all experiences
 - `GET /api/experiences/:id` - Get experience details with available slots
 
 ### Bookings
+
 - `POST /api/bookings` - Create a new booking
 
 **Request Body:**
+
 ```json
 {
   "experienceId": "string",
@@ -148,9 +154,11 @@ bookit/
 ```
 
 ### Promo Codes
+
 - `POST /api/promo/validate` - Validate a promo code
 
 **Request Body:**
+
 ```json
 {
   "code": "string",
@@ -159,6 +167,7 @@ bookit/
 ```
 
 **Available Promo Codes:**
+
 - `SAVE10` - 10% discount
 - `FLAT100` - 15% discount
 - `WELCOME20` - 20% discount
@@ -228,6 +237,7 @@ The application includes a Netlify Functions configuration for serverless deploy
 Currently, no environment variables are required for basic functionality. The application uses mock data.
 
 For production with a real database, you would add:
+
 ```
 DATABASE_URL=your_database_connection_string
 API_KEY=your_api_key
@@ -256,14 +266,17 @@ API_KEY=your_api_key
 ## 🐛 Troubleshooting
 
 ### Port Already in Use
+
 If port 5173 is already in use, Vite will automatically use the next available port.
 
 ### API Not Responding
+
 1. Ensure the dev server is running with `pnpm dev`
 2. Check that both frontend and backend compiled successfully
 3. Check browser console for errors
 
 ### Styling Issues
+
 1. Clear browser cache (Ctrl+Shift+Del)
 2. Ensure Tailwind CSS is properly configured
 3. Check `tailwind.config.ts` for correct content paths
@@ -275,6 +288,7 @@ This project is part of a fullstack assignment. See LICENSE file for details.
 ## 👨‍💻 Support
 
 For issues or questions:
+
 1. Check the troubleshooting section
 2. Review the code comments
 3. Check browser console for error messages

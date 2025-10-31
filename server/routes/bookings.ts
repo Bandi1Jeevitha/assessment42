@@ -27,7 +27,10 @@ export const handleCreateBooking: RequestHandler = (req, res) => {
     ) {
       return res
         .status(400)
-        .json({ error: "Missing required fields", message: "All fields are required" });
+        .json({
+          error: "Missing required fields",
+          message: "All fields are required",
+        });
     }
 
     if (!checkSlotAvailability(experienceId, slotId)) {
@@ -40,7 +43,10 @@ export const handleCreateBooking: RequestHandler = (req, res) => {
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       return res
         .status(400)
-        .json({ error: "Invalid email format", message: "Please provide a valid email address" });
+        .json({
+          error: "Invalid email format",
+          message: "Please provide a valid email address",
+        });
     }
 
     const booking = createBooking({

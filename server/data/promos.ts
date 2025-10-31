@@ -49,9 +49,11 @@ const promoCodes: Map<string, PromoCode> = new Map([
   ],
 ]);
 
-export function validatePromoCode(
-  code: string
-): { valid: boolean; discountPercentage?: number; message?: string } {
+export function validatePromoCode(code: string): {
+  valid: boolean;
+  discountPercentage?: number;
+  message?: string;
+} {
   const promo = promoCodes.get(code.toUpperCase());
 
   if (!promo) {

@@ -21,7 +21,7 @@ function generateBookingId(): string {
 }
 
 export function createBooking(
-  data: Omit<Booking, "id" | "createdAt" | "status">
+  data: Omit<Booking, "id" | "createdAt" | "status">,
 ): Booking {
   const booking: Booking = {
     ...data,
@@ -47,14 +47,14 @@ export function getAllBookings(): Booking[] {
 
 export function checkSlotAvailability(
   experienceId: string,
-  slotId: string
+  slotId: string,
 ): boolean {
   const slotBookings = Array.from(bookings.values()).filter(
-    (b) => b.experienceId === experienceId && b.slotId === slotId
+    (b) => b.experienceId === experienceId && b.slotId === slotId,
   );
   const totalParticipants = slotBookings.reduce(
     (sum, b) => sum + b.participants,
-    0
+    0,
   );
   // Assuming max 50 people per slot (you can adjust this)
   return totalParticipants < 50;
