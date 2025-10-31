@@ -17,22 +17,19 @@ export const handleCreateBooking: RequestHandler = (req, res) => {
       promoCode,
     } = req.body;
 
-    // Validate required fields
     if (
       !experienceId ||
       !slotId ||
       !participants ||
       !firstName ||
       !lastName ||
-      !email ||
-      !phone
+      !email
     ) {
       return res
         .status(400)
         .json({ error: "Missing required fields", message: "All fields are required" });
     }
 
-    // Check if slot is available
     if (!checkSlotAvailability(experienceId, slotId)) {
       return res.status(409).json({
         error: "Slot not available",
@@ -40,14 +37,12 @@ export const handleCreateBooking: RequestHandler = (req, res) => {
       });
     }
 
-    // Validate email format
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       return res
         .status(400)
         .json({ error: "Invalid email format", message: "Please provide a valid email address" });
     }
 
-    // Create the booking
     const booking = createBooking({
       experienceId,
       slotId,
@@ -61,7 +56,6 @@ export const handleCreateBooking: RequestHandler = (req, res) => {
       promoCode: promoCode || null,
     });
 
-    // Mark promo code as used if provided
     if (promoCode) {
       usePromoCode(promoCode);
     }
@@ -78,7 +72,6 @@ export const handleCreateBooking: RequestHandler = (req, res) => {
       totalPrice: booking.totalPrice,
     });
   } catch (error) {
-    console.error("Booking error:", error);
     res.status(500).json({
       error: "Failed to create booking",
       message: "An error occurred while processing your booking",
