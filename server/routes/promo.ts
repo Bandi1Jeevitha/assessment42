@@ -39,7 +39,6 @@ export const handleValidatePromo: RequestHandler = (req, res) => {
       message: `${result.discountPercentage}% discount applied!`,
     });
   } catch (error) {
-    console.error("Promo validation error:", error);
     res.status(500).json({
       error: "Failed to validate promo code",
       message: "An error occurred while validating the promo code",
